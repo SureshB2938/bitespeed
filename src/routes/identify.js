@@ -1,14 +1,11 @@
-const express = require("express");
-const router = express.Router();
-const { identify } = require("../controllers/identifyController");
+const { processIdentity } = require("../services/contactService");
 
-router.post("/", identify);
-router.get("/", (req, res) => {
-  res.send("Identify GET working ✅");
-});
-
-router.post("/", (req, res) => {
-  res.json({ message: "Identify POST working ✅" });
-});
-
-module.exports = router;
+exports.identify = async (req, res) => {
+  try {
+    const result = await processIdentity(req.body);
+    res.json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+};

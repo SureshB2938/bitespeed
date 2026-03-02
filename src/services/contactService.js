@@ -5,7 +5,7 @@ async function processIdentity(data) {
 
   // 1️⃣ Find all matching contacts
   const [matched] = await pool.query(
-    `SELECT * FROM contact WHERE email = ? OR phoneNumber = ?`,
+    `SELECT * FROM contact WHERE email = $1 OR phoneNumber = $2`,
     [email, phoneNumber]
   );
 
@@ -35,7 +35,7 @@ async function processIdentity(data) {
 
   let mainPrimary = primaries[0];
 
-  // 4️⃣ Merge other primaries into mainPrimary
+  // 4Merge other primaries into mainPrimary
   for (let i = 1; i < primaries.length; i++) {
     await pool.query(
       `UPDATE contact
@@ -45,7 +45,7 @@ async function processIdentity(data) {
     );
   }
 
-  // 5️⃣ Fetch all linked contacts
+  // Fetch all linked contacts
   const [allContacts] = await pool.query(
     `SELECT * FROM contact
      WHERE id = ? OR linkedId = ?`,
@@ -59,7 +59,7 @@ async function processIdentity(data) {
     .filter(c => c.linkPrecedence === "secondary")
     .map(c => c.id);
 
-  // 6️⃣ If new info → create secondary
+  //  If new info → create secondary
   const emailExists = email && emails.includes(email);
   const phoneExists = phoneNumber && phones.includes(phoneNumber);
 
