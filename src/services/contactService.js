@@ -35,7 +35,7 @@ async function processIdentity(data) {
 
   let mainPrimary = primaries[0];
 
-  // 4Merge other primaries into mainPrimary
+  // 4️⃣ Merge other primaries into mainPrimary
   for (let i = 1; i < primaries.length; i++) {
     await pool.query(
       `UPDATE contact
