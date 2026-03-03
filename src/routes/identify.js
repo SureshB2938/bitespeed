@@ -1,11 +1,13 @@
-const { processIdentity } = require("../services/contactService");
+const express = require("express");
+const router = express.Router();
 
-exports.identify = async (req, res) => {
-  try {
-    const result = await processIdentity(req.body);
-    res.json(result);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Something went wrong" });
-  }
-};
+const { identify } = require("../controllers/identifyController");
+
+router.post("/", identify);
+
+// GET route for browser
+router.get("/", (req, res) => {
+  res.send("This endpoint only supports POST requests. Use Postman to test.");
+});
+
+module.exports = router;
